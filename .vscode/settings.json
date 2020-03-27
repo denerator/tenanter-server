@@ -1,4 +1,9 @@
 {
-  "python.pythonPath": "/Users/user/Documents/tenanter/tenanter-server/env/bin/python3.7",
-  "git.ignoreLimitWarning": true
+  "python.pythonPath": "env/bin/python",
+  "git.ignoreLimitWarning": true,
+  "python.linting.pylintArgs": [
+    "--load-plugins=pylint_django"
+  ],
+  "python.linting.enabled": true,
+  "python.linting.pylintEnabled": true,
 }
