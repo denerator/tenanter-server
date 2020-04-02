@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Flat, Tenant
+from .models import Flat, Tenant, Bills_agreement
 
 
 class TenantSerializer(serializers.ModelSerializer):
@@ -20,10 +20,21 @@ class FlatSerializer(serializers.ModelSerializer):
         fields = ['id', 'address', 'owner']
 
 
+class BillsAgreementSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Bills_agreement
+        # List all of the fields that could possibly be included in a request
+        # or response, including fields specified explicitly above.
+        fields = ['id', 'flat', 'name', 'rate', 'is_dynamic']
+
+
 class FlatWithTenantSerializer(serializers.ModelSerializer):
     tenant = TenantSerializer()
+    bills_agreement = BillsAgreementSerializer(many=True)
+
     class Meta:
         model = Flat
         # List all of the fields that could possibly be included in a request
         # or response, including fields specified explicitly above.
-        fields = ['id', 'address', 'owner', 'tenant']
+        fields = ['id', 'address', 'owner', 'tenant', 'bills_agreement']

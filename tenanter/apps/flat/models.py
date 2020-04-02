@@ -28,7 +28,7 @@ class Tenant(models.Model):
 
 class Bills_agreement(models.Model):
     flat = models.ForeignKey(
-        Flat, related_name='flat_bills', on_delete=models.CASCADE)  # index
+        Flat, related_name='bills_agreement', on_delete=models.CASCADE)  # TODO: index
     name = models.CharField(max_length=40)
     rate = models.IntegerField()
     is_dynamic = models.BooleanField()
@@ -39,7 +39,7 @@ class Bills_agreement(models.Model):
 
 class Bills_history(models.Model):
     flat_id = models.ForeignKey(Flat, on_delete=models.CASCADE)
-    date = models.DateField()  # index
+    date = models.DateField()  # TODO: index
     name = models.CharField(max_length=40)
     rate = models.IntegerField()
     value = models.IntegerField()
@@ -52,7 +52,7 @@ class Bills_history(models.Model):
 
 class Payment_history(models.Model):
     date = models.DateField()
-    flat_id = models.IntegerField()
+    flat_id = models.IntegerField()  # TODO: index
     tenant_id = models.IntegerField()
     bills = models.IntegerField()
     rental_rate = models.IntegerField()
