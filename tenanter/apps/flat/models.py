@@ -3,33 +3,32 @@ from tenanter.apps.user.models import User
 
 
 class Flat(models.Model):
-    address = models.CharField(max_length=60)
-    owner_id = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='owner')
-    tenant_id = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='tenant')
+    address = models.CharField(max_length=60, unique=True)
+    owner = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='owned_flats')
 
     def __str__(self):
-        return f'{self.address}, {self.owner_id}'
+        return f'{self.address}, {self.owner}'
 
 
 class Tenant(models.Model):
-    signingDate = models.DateField()
-    paymentDay = models.IntegerField()
-    contractTime = models.IntegerField()
+    signing_date = models.DateField()
+    payment_day = models.IntegerField()
+    contract_time = models.IntegerField()
     rental_rate = models.IntegerField()
     deposit = models.IntegerField()
-    flat_id = models.ForeignKey(
-        Flat, unique=True, on_delete=models.CASCADE, related_name='flat')
-    tenant_id = models.ForeignKey(
-        User, unique=True, on_delete=models.CASCADE, related_name='user')
+    flat = models.OneToOneField(
+        Flat, on_delete=models.CASCADE, related_name='tenant')
+    name = models.CharField(max_length=30)  # For MVP we leave these fields
+    phone = models.CharField(max_length=30)
 
     def __str__(self):
-        return f'{self.flat_id}, {self.tenant_id}'
+        return f'{self.deposit}, {self.name}, {self.phone}'
 
 
 class Bills_agreement(models.Model):
-    flat_id = models.ForeignKey(Flat, on_delete=models.CASCADE)  # index
+    flat = models.ForeignKey(
+        Flat, related_name='flat_bills', on_delete=models.CASCADE)  # index
     name = models.CharField(max_length=40)
     rate = models.IntegerField()
     is_dynamic = models.BooleanField()

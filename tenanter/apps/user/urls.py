@@ -1,6 +1,7 @@
-from django.conf.urls import url
-from .views import RegistrationAPIView
+from django.urls import path
+from .views import RegistrationAPIView, UserDetailsAPIView
 
 urlpatterns = [
-    url(r'^user/?$', RegistrationAPIView.as_view()),
+    path('user/', RegistrationAPIView.as_view()),
+    path('user/<int:pk>/', UserDetailsAPIView.as_view())
 ]
