@@ -41,6 +41,7 @@ INSTALLED_APPS = [
 
     'tenanter.apps.user',
     'tenanter.apps.flat',
+    'tenanter.apps.bills',
 ]
 
 MIDDLEWARE = [

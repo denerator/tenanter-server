@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework import generics
 from rest_framework.response import Response
 from .serializers import FlatSerializer, TenantSerializer, FlatWithTenantSerializer, BillsAgreementSerializer
-from .models import Flat, Tenant, Bills_agreement
+from .models import Flat, Tenant
 
 
 class FlatCreationApiView(generics.CreateAPIView):
@@ -28,20 +28,6 @@ class TenantSigningAPIView(generics.ListCreateAPIView):
     queryset = Tenant.objects.all()
     serializer_class = TenantSerializer
 
-
-class FlatBillsCreationAPIView(generics.ListCreateAPIView):  # TODO: only create
-    queryset = Bills_agreement.objects.all()
-    serializer_class = BillsAgreementSerializer
-
-
-class BillsByFlatAPIView(generics.ListAPIView):
-    serializer_class = BillsAgreementSerializer
-
-    def get_queryset(self):
-        flat = self.kwargs['flat']
-        return Bills_agreement.objects.filter(flat=flat)
-
-
-class BillsEditAPIView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Bills_agreement.objects.all()
-    serializer_class = BillsAgreementSerializer
+class TenantEditAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Tenant.objects.all()
+    serializer_class = TenantSerializer

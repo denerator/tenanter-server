@@ -26,17 +26,6 @@ class Tenant(models.Model):
         return f'{self.deposit}, {self.name}, {self.phone}'
 
 
-class Bills_agreement(models.Model):
-    flat = models.ForeignKey(
-        Flat, related_name='bills_agreement', on_delete=models.CASCADE)  # TODO: index
-    name = models.CharField(max_length=40)
-    rate = models.IntegerField()
-    is_dynamic = models.BooleanField()
-
-    def __str__(self):
-        return f'{self.flat_id}, {self.name} {self.rate}'
-
-
 class Bills_history(models.Model):
     flat_id = models.ForeignKey(Flat, on_delete=models.CASCADE)
     date = models.DateField()  # TODO: index

@@ -20,4 +20,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include("tenanter.apps.user.urls")),
     path('api/', include("tenanter.apps.flat.urls")),
+    path('api/', include("tenanter.apps.bills.urls")),
 ]
