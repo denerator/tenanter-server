@@ -1,8 +1,10 @@
+"""Flat models declarations"""
 from django.db import models
 from tenanter.apps.user.models import User
 
 
 class Flat(models.Model):
+    """Flat model"""
     address = models.CharField(max_length=60, unique=True)
     owner = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='owned_flats')
@@ -12,6 +14,7 @@ class Flat(models.Model):
 
 
 class Tenant(models.Model):
+    """Tenant model"""
     signing_date = models.DateField()
     payment_day = models.IntegerField()
     contract_time = models.IntegerField()
@@ -24,19 +27,6 @@ class Tenant(models.Model):
 
     def __str__(self):
         return f'{self.deposit}, {self.name}, {self.phone}'
-
-
-class Bills_history(models.Model):
-    flat_id = models.ForeignKey(Flat, on_delete=models.CASCADE)
-    date = models.DateField()  # TODO: index
-    name = models.CharField(max_length=40)
-    rate = models.IntegerField()
-    value = models.IntegerField()
-    difference = models.IntegerField()
-    total = models.IntegerField()
-
-    def __str__(self):
-        return f'{self.flat_id}, {self.date} {self.name} {self.rate}'
 
 
 class Payment_history(models.Model):
