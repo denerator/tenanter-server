@@ -10,4 +10,5 @@ urlpatterns = [
          views.BillsHistoryByFlatAPIView.as_view()),
     path('bill/agreement/<int:pk>/', views.BillEditAPIView.as_view()),
     path('bill/history', views.BillHistoryAPIView.as_view()),
+    path('payment/', views.PaymentHistoryAPIView.as_view()),
 ]

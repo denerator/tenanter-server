@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import BillsAgreement, BillsHistory
+from .models import BillsAgreement, BillsHistory, PaymentHistory
 
 
 class BillsAgreementSerializer(serializers.ModelSerializer):
@@ -24,3 +24,21 @@ class BillsHistorySerializer(serializers.ModelSerializer):
         model = BillsHistory
         fields = ['id', 'flat', 'date', 'bill',
                   'value', 'rate', 'difference', 'total']
+
+
+class PaymentHistoryCreationSerializer(serializers.ModelSerializer):
+    """Payment history creation serializer"""
+
+    class Meta:
+        model = PaymentHistory
+        fields = ['flat', 'date', 'tenant']
+
+
+class PaymentHistorySerializer(serializers.ModelSerializer):
+    """Payment history retriving serializer"""
+    tenant = serializers.StringRelatedField()
+
+    class Meta:
+        model = PaymentHistory
+        fields = ['id', 'flat', 'date', 'bills', 'tenant',
+                  'rental_rate', 'total']

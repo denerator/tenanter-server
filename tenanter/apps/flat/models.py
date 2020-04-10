@@ -26,16 +26,4 @@ class Tenant(models.Model):
     phone = models.CharField(max_length=30)
 
     def __str__(self):
-        return f'{self.deposit}, {self.name}, {self.phone}'
-
-
-class Payment_history(models.Model):
-    date = models.DateField()
-    flat_id = models.IntegerField()  # TODO: index
-    tenant_id = models.IntegerField()
-    bills = models.IntegerField()
-    rental_rate = models.IntegerField()
-    total = models.IntegerField()
-
-    def __str__(self):
-        return f'{self.flat_id}, {self.date} {self.bills} {self.total}'
+        return self.name

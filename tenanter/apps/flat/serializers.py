@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from tenanter.apps.bills.serializers import BillsAgreementSerializer, BillsHistorySerializer
+from tenanter.apps.bills.serializers import BillsAgreementSerializer, BillsHistorySerializer, PaymentHistorySerializer
 from .models import Flat, Tenant
 
 
@@ -21,8 +21,9 @@ class FlatWithTenantSerializer(serializers.ModelSerializer):
     tenant = TenantSerializer(read_only=True)
     bills_agreement = BillsAgreementSerializer(many=True, read_only=True)
     bills_history = BillsHistorySerializer(many=True, read_only=True)
+    payment_history = PaymentHistorySerializer(many=True, read_only=True)
 
     class Meta:
         model = Flat
         fields = ['id', 'address', 'owner', 'tenant',
-                  'bills_agreement', 'bills_history']
+                  'bills_agreement', 'bills_history', 'payment_history']

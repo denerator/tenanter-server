@@ -1,11 +1,13 @@
+"""Bills Views"""
 import datetime
+from functools import reduce
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.serializers import ValidationError
-from tenanter.apps.flat.models import Flat
+from tenanter.apps.flat.models import Flat, Tenant
 from . import serializers
-from .models import BillsAgreement, BillsHistory
+from .models import BillsAgreement, BillsHistory, PaymentHistory
 
 
 class BillsByFlatAPIView(generics.ListAPIView):
@@ -49,13 +51,13 @@ class BillsHistoryCreationAPIView(generics.CreateAPIView):
         except ObjectDoesNotExist:
             raise ValidationError('Bill does not exist')
 
-        if BillsHistory.objects.filter(bill=bill, flat=flat, date__month=today.month).exists():
+        if BillsHistory.objects.filter(bill=bill, flat=flat, date__month=today.month, date__year=today.year).exists():
             raise ValidationError('You passed bill value this month already')
 
         if bill.is_dynamic:
             try:
                 previous_month = BillsHistory.objects.get(
-                    bill=bill, flat=flat, date__month=today.month - 1)
+                    bill=bill, flat=flat, date__month=today.month - 1, date__year=today.year)
                 difference = request.data['value'] - previous_month.value
                 total = difference * bill.rate
 
@@ -92,3 +94,39 @@ class BillHistoryAPIView(generics.ListAPIView):
         flat = self.request.query_params.get('flat')
         bill = self.request.query_params.get('bill')
         return BillsHistory.objects.filter(flat=flat, bill=bill)
+
+
+class PaymentHistoryAPIView(generics.CreateAPIView):
+    """Create payment history record"""
+    serializer_class = serializers.PaymentHistoryCreationSerializer
+    queryset = PaymentHistory.objects.all()
+
+    def create(self, request):
+
+        date = datetime.date.fromisoformat(request.data['date'])
+
+        if PaymentHistory.objects.filter(flat=request.data['flat'], date__month=date.month, date__year=date.year).exists():
+            raise ValidationError('You paid in this month already')
+
+        try:
+            tenant = Tenant.objects.get(pk=request.data['tenant'])
+        except ObjectDoesNotExist:
+            raise ValidationError('No such tenant')
+
+        month_bills = BillsHistory.objects.filter(
+            flat=request.data['flat'], date__month=date.month, date__year=date.year)
+        try:
+            flat = Flat.objects.get(pk=request.data['flat'])
+        except ObjectDoesNotExist:
+            raise ValidationError('No such flat')
+
+        bills_sum = reduce((lambda x, y: x.total + y.total), month_bills)
+
+        total = bills_sum + tenant.rental_rate
+
+        payment_record = PaymentHistory(
+            date=date, bills=bills_sum, rental_rate=tenant.rental_rate, tenant=tenant, flat=flat, total=total)
+        payment_record.save()
+        serializer = serializers.PaymentHistorySerializer(payment_record)
+
+        return Response(serializer.data)
