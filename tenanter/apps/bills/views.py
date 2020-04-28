@@ -1,6 +1,5 @@
 """Bills Views"""
 import datetime
-from functools import reduce
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import generics, status
 from rest_framework.response import Response
@@ -120,7 +119,10 @@ class PaymentHistoryAPIView(generics.CreateAPIView):
         except ObjectDoesNotExist:
             raise ValidationError('No such flat')
 
-        bills_sum = reduce((lambda x, y: x.total + y.total), month_bills)
+        bills_sum = 0
+
+        for bill in month_bills:
+            bills_sum += bill.total
 
         total = bills_sum + tenant.rental_rate
 
