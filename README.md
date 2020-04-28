@@ -2,4 +2,4 @@
 
 ## Database design
 
-![design-image](https://deener.pythonanywhere.com/static/tenant-design.jpg)
+![design-image](https://deener.pythonanywhere.com/static/db-design.jpg)
